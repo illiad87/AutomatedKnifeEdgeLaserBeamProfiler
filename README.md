@@ -22,6 +22,7 @@
   - Arduino IDE (Serial Monitor)
 
 <img width="2048" height="1536" alt="Laser Characterization" src="https://github.com/user-attachments/assets/38bc7bf3-bfe7-4908-933a-a2d6e5df759c" />
+
 > Note that the experiment (video shown in section below) takes place in a dark room. Also, the built-in ESP32 LEDs are covered with dark plastic plates to prevent interference with photoresistor
 
 ## Data Collection
