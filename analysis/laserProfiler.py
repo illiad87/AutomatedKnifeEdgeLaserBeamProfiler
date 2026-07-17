@@ -6,6 +6,7 @@ import util
 ARM_LENGTH = 5.1
 STEPS_PER_ROTATION = 2048
 FIXED_RESISTOR = 10**4 # 10K Ohms
+GAMMA = 0.7 # GL5528 photoresistor gamma value
 
 data = np.genfromtxt("photoresistorData.csv", delimiter=",", names=True)
 
@@ -47,7 +48,7 @@ print("Reference resistor resistance (Ohms): ", center_resistance)
 
 # convert ADC to relative power using the empirical power-law model of a photoresistor
 # note that fixed resistor is 10K Ohms, and the GL5528 photoresistor has a gamma value of 0.7, and the ADC is 12-bit (0-4095)
-relative_power = (center_resistance/(FIXED_RESISTOR * (4095/raw_ADC - 1)))**(1/0.7) # NOTE: for a derivation of the relative power equation, check README.md
+relative_power = (center_resistance/(FIXED_RESISTOR * (4095/raw_ADC - 1)))**(1/GAMMA) # NOTE: for a derivation of the relative power equation, check README.md
 
 # intensity is the negative gradient of relative power with respect to distance
 intensity = -np.gradient(relative_power, distances)
@@ -87,10 +88,8 @@ crossings_1e2 = util.interpolate_crossings(distances, smoothed_intensity, target
 
 print("Estimated distances for intensity 0.135 (cm):", crossings_1e2)
 
-# using the two 1/e^2 points, we can calculate the full width at 1/e^2
+# using the two 1/e^2 points, we can calculate diameter at 1/e^2
 fwhm_1e2 = crossings_1e2[1] - crossings_1e2[0]
-print("Full width at 1/e^2 (cm): ", fwhm_1e2)
-
 print("1/e^2 graphically-derived diameter at 1/e^2(cm): ", fwhm_1e2)
 
 # difference in diameters for error
