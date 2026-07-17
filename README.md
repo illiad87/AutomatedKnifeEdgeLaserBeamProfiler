@@ -25,35 +25,27 @@
 
 > Note that the experiment (video shown in section below) takes place in a dark room. Also, the built-in ESP32 LEDs are covered with dark plastic plates to prevent interference with photoresistor
 
-## Data Collection
+## Data Collection 
 
 https://github.com/user-attachments/assets/4db6cd97-dd47-4af8-84c1-0c3d3c2dd359
 > Note that Github limits content to 10Mb per file, so I had to adjust the video to 540p quality. This video is also shorter to include the essence of the experiment. In reality, the blade moved through a greater range of motion and more data was collected
 
 After uploading [my C++ code](firmware/Esp32DataCollection.cpp) to the ESP32, I printed the step-ADC data in the serial monitor and saved it in a [.csv file](analysis/photoresistorData.csv)
 
-Although I believe my comments in [laserProfiler.py](analysis/laserProfiler.py) are clear and informative, I would like to clarify below how I converted raw ADC values to relative power on line 42.
+## Data Analysis
 
-### Clarification of ADC -> Power conversion
+### Notes for Clarification of ADC -> Power conversion
+My written work for converting ADC values in a voltage divider circuit to relative photoresistor power are [linked here](https://github.com/user-attachments/files/30142301/Gaussian.Laser.Beam.Profiler.pdf).
+**This document is relevant for the equations used on line 42 and 51 of [laserProfiler.py](analysis/laserProfiler.py)**
 
-
-
-
-
-
-
-
+### Plots and Calculated 1/e<sup>2</sup> Diameters
+<img width="475" height="380" alt="image" src="https://github.com/user-attachments/assets/d870bd41-4ffa-48c1-9d25-c39ad81bcd16" />
+<img width="473" height="378" alt="image" src="https://github.com/user-attachments/assets/0500093e-ef08-4a48-b917-edc298e15d5c" />
 
 
 
+FWHM-derived diameter at 1/e<sup>2</sup>: 0.2702cm
 
+1/e^2 graphically-derived diameter at 1/e<sup>2</sup>: 0.2764cm
 
-
-
-
-
-   
-  
-    
-  
-
+Difference in diameters: 0.0062cm
