@@ -42,8 +42,6 @@ My written work for converting ADC values in a voltage divider circuit to relati
 <img width="475" height="380" alt="image" src="https://github.com/user-attachments/assets/d870bd41-4ffa-48c1-9d25-c39ad81bcd16" />
 <img width="473" height="378" alt="image" src="https://github.com/user-attachments/assets/0500093e-ef08-4a48-b917-edc298e15d5c" />
 
-
-
 FWHM-derived 1/e<sup>2</sup> diameter: 0.2702cm
 
 1/e^2 graphically-derived 1/e<sup>2</sup> diameter: 0.2764cm
