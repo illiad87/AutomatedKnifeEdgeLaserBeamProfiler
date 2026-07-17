@@ -2,7 +2,7 @@
 
 ## Intro
 
-### In this optoelectronics characterization experiment, I used a differentiated knife-edge method with FWHM interpolation to find the 1/e<sup>2</sup> beam diameter. I user an ESP32, a laser diode, photoresistor, stepper motor and knife edge to collect power-distance data. I later analyzed this data in Python using Numpy and Matplotlib. My calculated beam  1/e<sup>2</sup> value was 2.76mm.
+### In this optoelectronics characterization experiment, I used a differentiated knife-edge method with FWHM interpolation to find the 1/e<sup>2</sup> beam diameter. I user an ESP32, a laser diode, photoresistor, stepper motor and knife edge to collect power-distance data. I later analyzed this data in Python using Numpy and Matplotlib. My calculated beam 1/e<sup>2</sup> value was 2.76mm.
 
 ## Setup
 **Equipment**
@@ -35,8 +35,8 @@ After uploading [my C++ code](firmware/Esp32DataCollection.cpp) to the ESP32, I 
 ## Data Analysis
 
 ### Notes for Clarification of ADC -> Power conversion
-My written work for converting ADC values in a voltage divider circuit to relative photoresistor power are [linked here](https://github.com/user-attachments/files/30142301/Gaussian.Laser.Beam.Profiler.pdf).
-**This document is relevant for the equations used on line 42 and 51 of [laserProfiler.py](analysis/laserProfiler.py)**
+My written work for converting ADC values in a voltage divider circuit to relative photoresistor power are [linked here](/ADC_Power_Conversion.pdf).
+> This document is relevant for the equations used on line 42 and 51 of [laserProfiler.py](analysis/laserProfiler.py)
 
 ### Plots and Calculated 1/e<sup>2</sup> Diameters
 <img width="475" height="380" alt="image" src="https://github.com/user-attachments/assets/d870bd41-4ffa-48c1-9d25-c39ad81bcd16" />
@@ -44,8 +44,8 @@ My written work for converting ADC values in a voltage divider circuit to relati
 
 
 
-FWHM-derived diameter at 1/e<sup>2</sup>: 0.2702cm
+FWHM-derived 1/e<sup>2</sup> diameter: 0.2702cm
 
-1/e^2 graphically-derived diameter at 1/e<sup>2</sup>: 0.2764cm
+1/e^2 graphically-derived 1/e<sup>2</sup> diameter: 0.2764cm
 
 Difference in diameters: 0.0062cm
