@@ -44,52 +44,54 @@ relative_power = (1/(10**4 * (4095/raw_ADC - 1)))**(1/0.7)
 # update zero_index
 zero_index = np.where(raw_ADC == 0)[0][0]
 
-# for the zero value, we can use the same formula but with a raw_ADC value of 1 (to avoid division by zero)
+# for the zero value, we can use the same formula but with a raw_ADC value of 1 (to avoid an inf/nan value produced by division by zero)
 # an ADC value of 1 is very close to 0, so the relative power will be sufficiently small
 relative_power[zero_index] = (1/(10**4 * (4095/1 - 1)))**(1/0.7)
 print("Relative power: ", relative_power)
 
+# intensity is the negative gradient of relative power with respect to distance
 intensity = -np.gradient(relative_power, distances)
 print("Intensity: ", intensity)
 
+# to avoid noise in the intensity data, we can apply a moving average filter to smooth the intensity values
 smoothed_intensity = util.moving_average_5_with_edges(intensity)
 
 # make intensity values range from 0 to 1 to have a relative intensity profile
 smoothed_intensity = (smoothed_intensity/np.max(smoothed_intensity))
 
+# plot the smoothed intensity profile
 plt.plot(distances, smoothed_intensity)
 plt.xlabel("Distance (cm)")
 plt.ylabel("Smoothed Intensity (normalized)")
 plt.title("Laser Profile")
 plt.show()
 
-
 # INTERPOLATION for FWHM: find the two distances where intensity is half of the max
 target = 0.5
 crossings = util.interpolate_crossings(distances, smoothed_intensity, target)
 
-print("Estimated distances for intensity 0.5:", crossings)
+print("Estimated distances for intensity 0.5 (cm):", crossings)
 
 # using the two half-maximum points, we can calculate the full width at half maximum (FWHM)
 fwhm = crossings[1] - crossings[0]
-print("Full width at half maximum (FWHM): ", fwhm)
+print("Full width at half maximum (FWHM) (cm): ", fwhm)
 
 # fwhm-derived beam diameter (core center of the beam)
-fwhm_beam_diameter = fwhm * 1.699
+fwhm_beam_diameter = fwhm * 1.699 # https://optics.ansys.com/hc/en-us/articles/42661666396947-How-to-convert-FWHM-measurements-to-1-e-2-halfwidths
 print("FWHM-derived diameter at 1/e^2(cm): ", fwhm_beam_diameter)
 
 # INTERPOLATION for 1/e^2: find the two distances where intensity is 13.5% of the max
 target = 0.135
 crossings_1e2 = util.interpolate_crossings(distances, smoothed_intensity, target)
 
-print("Estimated distances for intensity 0.135:", crossings_1e2)
+print("Estimated distances for intensity 0.135 (cm):", crossings_1e2)
 
 # using the two 1/e^2 points, we can calculate the full width at 1/e^2
 fwhm_1e2 = crossings_1e2[1] - crossings_1e2[0]
-print("Full width at 1/e^2: ", fwhm_1e2)
+print("Full width at 1/e^2 (cm): ", fwhm_1e2)
 
 print("1/e^2 graphically-derived diameter at 1/e^2(cm): ", fwhm_1e2)
 
-# Final estimated beam_diameter at 1/e^2
+# average the two derived diameters to get a final estimated beam_diameter at 1/e^2
 final_beam_diameter = (fwhm_beam_diameter + fwhm_1e2) / 2
 print("Final beam diameter (cm): ", final_beam_diameter)
