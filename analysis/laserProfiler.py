@@ -5,6 +5,7 @@ import util
 
 ARM_LENGTH = 5.1
 STEPS_PER_ROTATION = 2048
+FIXED_RESISTOR = 10**4 # 10K Ohms
 
 data = np.genfromtxt("photoresistorData.csv", delimiter=",", names=True)
 
@@ -19,13 +20,13 @@ zero_position = np.where(raw_ADC[start_idx:] == 0)[0][0]
 
 zero_index = start_idx + zero_position
 
-steps = steps[start_idx:zero_index + 1]
-raw_ADC = raw_ADC[start_idx:zero_index + 1]
+steps = steps[start_idx:zero_index]
+raw_ADC = raw_ADC[start_idx:zero_index]
 
 # make the first step start from 0
 steps -= 40
 
-print(steps)
+print("Steps: ", steps)
 
 # replace steps with a distance array
 # calculate distance per step in centimeters by dividing path circumference by number of steps
@@ -36,18 +37,17 @@ print("Distance per step (cm): ", distancePerStep)
 distances = steps * distancePerStep
 print("Distances (cm): ", distances)
 
-# NOTE: for a derivation of this equation, check README.md
+# convert ADC values to photoresistor resistances using the voltage divider formula (derived in README.md)
+photoresistor_resistances = (FIXED_RESISTOR * (4095/raw_ADC - 1))
+# use minimum photoresistor resistance as a reference resistance for the relative power calculation
+center_resistance = np.min(photoresistor_resistances)
+
+print("Photoresistor resistances (Ohms): ", photoresistor_resistances)
+print("Reference resistor resistance (Ohms): ", center_resistance)
+
 # convert ADC to relative power using the empirical power-law model of a photoresistor
 # note that fixed resistor is 10K Ohms, and the GL5528 photoresistor has a gamma value of 0.7, and the ADC is 12-bit (0-4095)
-relative_power = (1/(10**4 * (4095/raw_ADC - 1)))**(1/0.7)
-
-# update zero_index
-zero_index = np.where(raw_ADC == 0)[0][0]
-
-# for the zero value, we can use the same formula but with a raw_ADC value of 1 (to avoid an inf/nan value produced by division by zero)
-# an ADC value of 1 is very close to 0, so the relative power will be sufficiently small
-relative_power[zero_index] = (1/(10**4 * (4095/1 - 1)))**(1/0.7)
-print("Relative power: ", relative_power)
+relative_power = (center_resistance/(FIXED_RESISTOR * (4095/raw_ADC - 1)))**(1/0.7) # NOTE: for a derivation of the relative power equation, check README.md
 
 # intensity is the negative gradient of relative power with respect to distance
 intensity = -np.gradient(relative_power, distances)
@@ -56,8 +56,9 @@ print("Intensity: ", intensity)
 # to avoid noise in the intensity data, we can apply a moving average filter to smooth the intensity values
 smoothed_intensity = util.moving_average_5_with_edges(intensity)
 
-# make intensity values range from 0 to 1 to have a relative intensity profile
-smoothed_intensity = (smoothed_intensity/np.max(smoothed_intensity))
+# normalize the smoothed intensity values to a range of 0 to 1
+smoothed_intensity = smoothed_intensity / np.max(smoothed_intensity)
+print("Smoothed intensity (normalized): ", smoothed_intensity)
 
 # plot the smoothed intensity profile
 plt.plot(distances, smoothed_intensity)
@@ -92,6 +93,6 @@ print("Full width at 1/e^2 (cm): ", fwhm_1e2)
 
 print("1/e^2 graphically-derived diameter at 1/e^2(cm): ", fwhm_1e2)
 
-# average the two derived diameters to get a final estimated beam_diameter at 1/e^2
-final_beam_diameter = (fwhm_beam_diameter + fwhm_1e2) / 2
-print("Final beam diameter (cm): ", final_beam_diameter)
+# difference in diameters for error
+difference = abs(fwhm_beam_diameter - fwhm_1e2)
+print("Difference in diameters (cm): ", difference)
