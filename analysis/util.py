@@ -1,5 +1,6 @@
 import numpy as np
 
+# applies a moving average filter with a window size of 5, preserving the edges of the array
 def moving_average_5_with_edges(arr):
     arr = np.asarray(arr, dtype=float)
     n = len(arr)
@@ -12,6 +13,7 @@ def moving_average_5_with_edges(arr):
 
     return smoothed
 
+# interpolates crossings of a target value in a smoothed intensity profile
 def interpolate_crossings(distances, smoothed_intensity, target):
     crossings = []
     for i in range(len(smoothed_intensity) - 1):
