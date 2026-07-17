@@ -32,6 +32,11 @@ https://github.com/user-attachments/assets/4db6cd97-dd47-4af8-84c1-0c3d3c2dd359
 
 After uploading [my C++ code](firmware/Esp32DataCollection.cpp) to the ESP32, I printed the step-ADC data in the serial monitor and saved it in a [.csv file](analysis/photoresistorData.csv)
 
+Although I believe my comments in [laserProfiler.py](analysis/laserProfiler.py) are clear and informative, I would like to clarify below how I converted raw ADC values to relative power on line 42.
+
+### Clarification of ADC -> Power conversion
+
+
 
 
 
